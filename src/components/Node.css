@@ -1,0 +1,17 @@
+.node{
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
+}
+
+.iswall{
+    background-color: pink;
+}
+
+.node-start{
+    background-color: green;
+}
+
+.node-end{
+    background-color: red;
+}

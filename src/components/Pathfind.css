@@ -1,0 +1,13 @@
+.Wrapper{
+    max-width: 80%;
+    margin: auto;
+}
+
+.rowWrapper{
+    display: flex;
+}
+
+.node-shortest-path{
+background-color: green;
+
+}
