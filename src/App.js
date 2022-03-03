@@ -23,9 +23,6 @@ function App() {
     setProducts(products)
   }
 
-  
-
-
   return (
     <div>
     <Pathfind products = {Products}/>

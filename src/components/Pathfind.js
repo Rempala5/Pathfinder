@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import Node from  "./Node"
 import "./Pathfind.css"
 
-
 const cols = 12;
 const rows = 10;
 
@@ -15,7 +14,6 @@ const Pathfind = (props) =>{
     const [Grid, setGrid] = useState([]);
     const [Path, setPath] = useState([]);
     const [Products, setProducts] = useState(props.products);
-
     
     useEffect(() => {
         console.log(props.products)
@@ -30,12 +28,15 @@ const Pathfind = (props) =>{
         }
         createSpot(grid);
         setGrid(grid);
-        addNeighbors(grid);        
-       
-        
-       
-    };
+        addNeighbors(grid);  
 
+        //startNode = Grid[Node_Start_ROW][NODE_START_COL]
+        //endNode = GRID[NODE_END_ROW][NODE_END_COL]
+        // let path = depthfirstSearch(startNode, endNode)
+
+        //setPath(Path)
+              
+    };
 
 
     const createSpot = (grid) =>{
