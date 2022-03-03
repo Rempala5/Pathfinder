@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import Node from  "./Node"
 import "./Pathfind.css"
-import Astar from "../astarAlgorithm/astar.js"
+
 
 const cols = 12;
 const rows = 10;
@@ -31,15 +31,9 @@ const Pathfind = (props) =>{
         createSpot(grid);
         setGrid(grid);
         addNeighbors(grid);        
-        let startNode = grid[NODE_START_ROW][NODE_START_COL];
-        startNode.isend = false;
-        let endNode = grid[NODE_END_ROW][NODE_END_COL];
-
-        let path = Astar(startNode, endNode);
-
-        startNode.isWall = false;
-        endNode.isWall = false;
-        setPath(path);
+       
+        
+       
     };
 
 
