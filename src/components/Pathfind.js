@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import Node from  "./Node"
 import "./Pathfind.css"
+import Astar from "../astarAlgorithm/astar.js"
 
 
 const cols = 12;
@@ -40,12 +41,11 @@ const Pathfind = () =>{
             gridelement.title = products[i].name;
             console.log(gridelement);
         }
-
-        //console.log(Products)
-        //startNode = Grid[Node_Start_ROW][NODE_START_COL]
-        //endNode = GRID[NODE_END_ROW][NODE_END_COL]
-        // let path = depthfirstSearch(startNode, endNode)
-        //setPath(Path)   
+        let startNode = grid[Node_Start_ROW][NODE_START_COL]
+        let endNode = grid[NODE_END_ROW][NODE_END_COL]
+        let path = Astar(startNode, endNode)
+        setPath(path)   
+       
     };
 
     const createSpot = (grid) =>{
@@ -91,11 +91,23 @@ const Pathfind = () =>{
             <div>
             {list}
             </div>
-            
-            
         </div>
         );  
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const addNeighbors = (grid) => {
     for(let i=0; i< rows; i++){
@@ -107,6 +119,7 @@ const addNeighbors = (grid) => {
 
 function getAisles(x, y){
     let isWall = false;
+    let pickupTile = null;
     if (y == 0 || y== cols-1 ){
         isWall = true;
     }
@@ -136,6 +149,7 @@ function Spot(i, j){
     this.neighbors = [];
     this.isWall = getAisles(i, j);
     this.previous = undefined;
+    this.pickupTile = undefined;
     this.addneighbors = function(grid){
         let i = this.y;
         let j = this.x;
