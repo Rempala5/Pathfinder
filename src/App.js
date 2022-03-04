@@ -3,29 +3,33 @@ import './App.css';
 import Pathfind from './components/Pathfind';
 import { useEffect, useState } from 'react';
 
+
+const Node_Start_ROW = 9;
+const Node_Start_COL = 10;
+
+Array.prototype.swap = function (x,y) {
+  var b = this[x];
+  this[x] = this[y];
+  this[y] = b;
+  return this;
+}
+
+function distance_from_start(col, row){
+  return (Math.abs(Node_Start_COL - col) + Math.abs(Node_Start_ROW - row));
+
+}
+
 function App() {
   let [Products, setProducts] = useState(new Array());
-
+  
   useEffect(()=>{
     console.log("top rednered")
-    initializeProducts();
   }, []);
 
-  function initializeProducts(){
-    let products = new Array();
-    let cup = new Product(1, 1, 'cup');
-    let bead = new Product(9,4,'bead');
-    let toy = new Product(1,8, 'toy');
-    products.push(cup);
-    products.push(bead);
-    products.push(toy);
-
-    setProducts(products)
-  }
-
+     
   return (
     <div>
-    <Pathfind products = {Products}/>
+    <Pathfind/>
     <h1>Hello World</h1>
     </div>
   

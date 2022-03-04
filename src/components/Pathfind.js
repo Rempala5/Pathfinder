@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import Node from  "./Node"
 import "./Pathfind.css"
 
+
 const cols = 12;
 const rows = 10;
 
@@ -10,17 +11,18 @@ let NODE_START_COL = 10;
 const NODE_END_ROW = 1;
 const NODE_END_COL = 1;
 
-const Pathfind = (props) =>{
+const Pathfind = () =>{
     const [Grid, setGrid] = useState([]);
     const [Path, setPath] = useState([]);
-    const [Products, setProducts] = useState(props.products);
+    const [Products, setProducts] = useState([]);
+    let products = new Array();
     
     useEffect(() => {
-        console.log(props.products)
+        products = initiateProducts();
         initializeGrid();
-    }, [Products]);
+        setProducts(products);
+    },[]);
 
-   
     const initializeGrid = () =>{
         const grid = new Array(rows);
         for(let i = 0; i < rows; i++){
@@ -30,14 +32,21 @@ const Pathfind = (props) =>{
         setGrid(grid);
         addNeighbors(grid);  
 
+        console.log(products);
+
+        for(let i=0; i<products.length; i++){
+            let gridelement = grid[products[i].shelf_id.x][products[i].shelf_id.y];
+            gridelement.isEnd = true;
+            gridelement.title = products[i].name;
+            console.log(gridelement);
+        }
+
+        //console.log(Products)
         //startNode = Grid[Node_Start_ROW][NODE_START_COL]
         //endNode = GRID[NODE_END_ROW][NODE_END_COL]
         // let path = depthfirstSearch(startNode, endNode)
-
-        //setPath(Path)
-              
+        //setPath(Path)   
     };
-
 
     const createSpot = (grid) =>{
         for(let i=0; i< rows; i++){
@@ -49,14 +58,13 @@ const Pathfind = (props) =>{
 
     const gridwithNode = (
         <div>
-        {Products[0]}
             {Grid.map((row, rowIndex) => {
                 return (
                     <div key={rowIndex} className="rowWrapper">
                         {row.map((col, colIndex) => {
-                            const {isStart, isEnd, isWall} = col;
+                            const {isStart, isEnd, isWall, title} = col;
                             return(
-                                <Node key={colIndex} isStart={isStart} isEnd={isEnd} row={rowIndex} col={colIndex} isWall={isWall}/>
+                                <Node key={colIndex} isStart={isStart} isEnd={isEnd} row={rowIndex} col={colIndex} isWall={isWall} title={title}/>
                             )
                         })}
                     </div>
@@ -64,7 +72,6 @@ const Pathfind = (props) =>{
             })}
         </div>
     );
-
 
     const visualizePath = () => {
         for(let i=0; i<Path.length; i++){
@@ -74,12 +81,18 @@ const Pathfind = (props) =>{
         console.log("Visualizing")
     }
 
-    
+    const list = Products.map(product => <li>{product.name}</li>);
+
     return(
         <div className="Wrapper">
         <button onClick={visualizePath}>Visualize Path</button>
             <h1>Pathfind component</h1>
             {gridwithNode}
+            <div>
+            {list}
+            </div>
+            
+            
         </div>
         );  
 };
@@ -119,6 +132,7 @@ function Spot(i, j){
     this.g = 0;
     this.f = 0;
     this.h = 0;
+    this.title = null;
     this.neighbors = [];
     this.isWall = getAisles(i, j);
     this.previous = undefined;
@@ -131,5 +145,60 @@ function Spot(i, j){
         if(j < cols - 1) this.neighbors.push(grid[i][j+1]);
     };
 }
+
+
+
+const Node_Start_ROW = 9;
+const Node_Start_COL = 10;
+
+Array.prototype.swap = function (x,y) {
+    var b = this[x];
+    this[x] = this[y];
+    this[y] = b;
+    return this;
+}
+
+function distance_from_start(col, row){
+    return (Math.abs(Node_Start_COL - col) + Math.abs(Node_Start_ROW - row));
+}
+
+function Product(col,row, name){
+    this.shelf_id = { "x": col, "y": row}
+    //this.location = {"x": locCol, "y": locRow}
+    this.name = name;
+  }
+
+  const initiateProducts= () =>{
+    console.log("bottomw")
+    let tempProducts = new Array();
+    let cup = new Product(1, 1, 'cup');
+    let bead = new Product(4,9,'bead');
+    let toy = new Product(1,8, 'toy');
+
+    tempProducts.push(cup);
+    tempProducts.push(bead);
+    tempProducts.push(toy);
+
+    let length = tempProducts.length;
+    let products = new Array();
+
+    while(tempProducts.length > 0){
+    let min = distance_from_start(tempProducts[0].x, tempProducts[0].y);
+    let minIndex = 0;
+    for(let i=0; i<tempProducts.length; i++){
+        let newMin = distance_from_start((tempProducts[i].x, tempProducts[i].y))
+        if(newMin < min){
+        minIndex = i;
+        }
+    }
+    tempProducts.swap(minIndex, tempProducts.length-1);
+    products.push(tempProducts.pop()); 
+      
+    }
+    
+    return products;
+    
+}
+
 
 export default Pathfind;
