@@ -20,6 +20,7 @@ const Pathfind = (props) =>{
     useEffect(() => {
         products = props.products;
         console.log(props.products);
+        
         initializeGrid();
         setProducts(products);
     },[props.products]);
@@ -29,16 +30,15 @@ const Pathfind = (props) =>{
         for(let i = 0; i < rows; i++){
             grid[i] = new Array(cols);
         }
+
         createSpot(grid);
         setGrid(grid);
         addNeighbors(grid);  
-        addLabels(grid);
+        addLabels(grid);        
 
-        console.log(products);
-        
-        let parent_path = new Array();
+        let parent_path = [];
         let startNode = grid[NODE_START_ROW][NODE_START_COL];
-
+        products = insertionSort(products);
         for(let i=0; i<products.length; i++){
             let gridelement = grid[products[i].shelf_id.x][products[i].shelf_id.y];
             gridelement.isEnd = true;
@@ -47,20 +47,27 @@ const Pathfind = (props) =>{
             gridelement.title = products[i].name;
             let endNode = gridelement;
             let path = Astar(startNode, endNode);
+            products[i].startD=path.length;
             for(let i=0; i<path.length; i++){
                 parent_path.push(path[i]);
             }
             cleanSpots(grid)
             startNode = endNode;
         }
-
-        setPath(parent_path);
-        
-        // let endNode = grid[NODE_END_ROW][NODE_END_COL]
-        // path = Astar(startNode, endNode)
-        // setPath(path)   
+        setPath(parent_path); 
     };
 
+    function insertionSort(arr){
+        for(let i = 1; i < arr.length;i++){
+            for(let j = i - 1; j > -1; j--){
+                if(arr[j + 1].startD < arr[j].startD){
+                    [arr[j+1],arr[j]] = [arr[j],arr[j + 1]];
+                }
+            }
+        };
+      return arr;
+    }
+        
     const cleanSpots = (grid) =>{
         for (let r= 0; r < rows; r++){
             for(let c=0; c<cols; c++){

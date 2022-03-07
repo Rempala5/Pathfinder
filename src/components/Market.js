@@ -15,19 +15,21 @@ Array.prototype.swap = function (x,y) {
 
   function Product(col,row, name){
     this.shelf_id = { "x": col, "y": row}
-    //this.location = {"x": locCol, "y": locRow}
     this.name = name;
+    this.startD = distance_from_start(col,row);
   }
 
   const initiateProducts = () =>{
     console.log("bottomw")
     let tempProducts = new Array();
     let cup = new Product(13, 14, 'cup');
-    let bead = new Product(15,4,'bead');
+    let bead = new Product(15,6,'bead');
     let toy = new Product(46, 14, 'toy');
+    let cake = new Product(30, 44, 'cake');
 
     tempProducts.push(toy);
     tempProducts.push(cup);
+    tempProducts.push(cake);
     tempProducts.push(bead);
     
     // tempProducts.push(bead);
@@ -40,12 +42,12 @@ Array.prototype.swap = function (x,y) {
     let min = distance_from_start(tempProducts[0].shelf_id.x, tempProducts[0].shelf_id.y);
     let minIndex = 0;
     for(let i=0; i<tempProducts.length; i++){
-        let newMin = distance_from_start((tempProducts[i].shelf_id.x, tempProducts[i].shelf_id.y))
+        let newMin = distance_from_start(tempProducts[i].shelf_id.x, tempProducts[i].shelf_id.y);
         if(newMin < min){
         minIndex = i;
         }
     }
-    tempProducts.swap(minIndex, tempProducts.length-1);
+    tempProducts.swap(minIndex, 0);
     products.push(tempProducts.pop());  
     }
     return products;
