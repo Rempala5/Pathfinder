@@ -39,12 +39,15 @@ const Pathfind = (props) =>{
         let parent_path = [];
         let startNode = grid[NODE_START_ROW][NODE_START_COL];
         products = insertionSort(products);
+        let checkout = grid[26][46];
         for(let i=0; i<products.length; i++){
             let gridelement = grid[products[i].shelf_id.x][products[i].shelf_id.y];
             gridelement.isEnd = true;
             gridelement.isWall = false;
             gridelement.isPath= true;
             gridelement.title = products[i].name;
+            gridelement.isPickupTile = true;
+            document.getElementById(`node-${products[i].shelf_id.y}-${products[i].shelf_id.x}`).style.background = 'pink';
             let endNode = gridelement;
             let path = Astar(startNode, endNode);
             products[i].startD=path.length;
@@ -53,6 +56,10 @@ const Pathfind = (props) =>{
             }
             cleanSpots(grid)
             startNode = endNode;
+        }
+        let path = Astar(startNode, checkout);
+        for(let i=0; i<path.length; i++){
+            parent_path.push(path[i]);
         }
         setPath(parent_path); 
     };
@@ -94,9 +101,9 @@ const Pathfind = (props) =>{
                 return (
                     <div key={rowIndex} className="rowWrapper">
                         {row.map((col, colIndex) => {
-                            const {isStart, isEnd, isWall, isAisle, isPath, title} = col;
+                            const {isStart, isEnd, isWall, isAisle, isPath, title, isPickupTile} = col;
                             return(
-                                <Node key={colIndex} isStart={isStart} isAisle={isAisle} isPath={isPath} isEnd={isEnd} row={rowIndex} col={colIndex} isWall={isWall} title={title}/>
+                                <Node key={colIndex} isStart={isStart} isAisle={isAisle} isPath={isPath} isEnd={isEnd} row={rowIndex} col={colIndex} isWall={isWall} title={title} isPickupTile={isPickupTile}/>
                             )
                         })}
                     </div>
@@ -248,7 +255,7 @@ function Spot(i, j){
     this.isPath = getPath(i, j);
     this.isFittingRoom = getFittingRoom(i, j);
     this.previous = undefined;
-    this.pickupTile = undefined;
+    this.isPickupTile = undefined;
     this.addneighbors = function(grid){
         let i = this.y;
         let j = this.x;
