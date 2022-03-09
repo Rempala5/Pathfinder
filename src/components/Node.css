@@ -1,6 +1,6 @@
 .node{
-    width: 6px;
-    height: 6px;
+    width: 6.5px;
+    height: 6.5px;
     border: 0px solid black;
 }
 
@@ -10,7 +10,7 @@
 
 .isaisle{
     background-color: #FFFFFF;
-    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.15);
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.05);
 }
 
 .ispath{
@@ -25,7 +25,7 @@
     overflow: visible;
     position: absolute;
     vertical-align: text-top;
-    font-size: 8px;
+    font-size: 12px;
     color: #4b4b4b;
 }
 

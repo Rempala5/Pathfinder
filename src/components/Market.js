@@ -17,7 +17,7 @@ Array.prototype.swap = function (x,y) {
     this.id = `${row}-${col}`
     this.plat_id = {"x":plat_col, "y": plat_row};
     this.name = name;
-    this.startD = distance_from_start(col,row);
+    this.startD = distance_from_start(plat_col,plat_row);
     this.isPicked = true;
     this.live = false;
     this.path = [];
@@ -25,19 +25,21 @@ Array.prototype.swap = function (x,y) {
 
   const initiateProducts = () =>{
     let tempProducts = new Array();
-    let cup = new Product(13, 14, 'cup', 14, 14);
-    let bead = new Product(15,6,'bead', 14, 6);
-    let toy = new Product(46, 14, 'toy', 45, 14);
-    let cake = new Product(30, 44, 'cake', 30, 43);
-    let candy = new Product(16, 20, 'candy', 12, 21);
-    let chocolate = new Product(12, 18, 'chocolate', 12, 19);
+    let item1 = new Product(17, 18, 'Sensible Portions Sea Salt Garden Veggie Straws - 7oz', 17, 17);
+    let item2 = new Product(15, 20, 'Frito-Lay Variety Pack Classic Mix - 18ct', 15, 19);
+    let item3 = new Product(10, 26, 'Pampers Sensitive Baby Wipes - 504ct', 10, 27);
+    let item4 = new Product(16, 28, 'Pampers Swaddlers Diapers Enormous Pack - Size 2 - 148ct', 16, 27);
+    let item5 = new Product(12, 29, 'Silicone Bib with Decal - Cloud Island Dogs/Dots', 12, 30);
+    let item6 = new Product(17, 44, 'Clinique High Impact Mascara - Black - 0.28 fl oz - Ulta Beauty', 17, 43);
+    let item7 = new Product(16, 48, 'Benefit Cosmetics Precisely, My Brow Pencil Waterproof Eyebrow Definer - Shade 3.7 - Warm Medium Brown - 0.0002oz - Ulta Beauty', 16, 49);
 
-    tempProducts.push(toy);
-    tempProducts.push(cup);
-    tempProducts.push(cake);
-    tempProducts.push(bead);
-    tempProducts.push(candy);
-    tempProducts.push(chocolate);
+    tempProducts.push(item2);
+    tempProducts.push(item1);
+    tempProducts.push(item3);
+    tempProducts.push(item4);
+    tempProducts.push(item5);
+    tempProducts.push(item6);
+    tempProducts.push(item7);
     
     // tempProducts.push(bead);
     // tempProducts.push(toy);

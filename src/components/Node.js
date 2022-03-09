@@ -13,12 +13,12 @@ const Node = ({isStart, isEnd, row, col, isWall, isAisle, isPath, title, isPicku
     if(isPickupTile){
 
         return (
-        <div className={`node ${classes}`} id={`node-${col}-${row}`}><span class="title"></span></div>
+        <div className={`node ${classes}`} id={`node-${col}-${row}`}><span className="title"></span></div>
         );
     }
 
     return(
-        <div className={`node ${classes}`} id={`node-${col}-${row}`}><span class="title">{name}</span></div>
+        <div className={`node ${classes}`} id={`node-${col}-${row}`}><span className="title">{name}</span></div>
     );
 
 

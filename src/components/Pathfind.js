@@ -262,26 +262,24 @@ const Pathfind = (props) =>{
         
     }
 
-    const list = Products.map(product => <li id = {`${product.shelf_id.y}-${product.shelf_id.x}`} onClick={(product) => assignGoal(product)}>{product.name}</li>) ;
+    const list = Products.map(product => <li id = {`${product.shelf_id.y}-${product.shelf_id.x}`} onClick={(product) => assignGoal(product)} className = "list">{product.name}</li>);
 
     const checkout = () =>{
         let path = Astar(Goal, Grid[NODE_END_ROW][NODE_END_COL]);
         for(let i = 0; i<path.length; i++){
             let nodeval = path[i];
-            document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = 'red'
+            document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = 'rgb(238, 177, 177)'
         }
     }
 
     return(
         <div className="Wrapper">
-        <button onClick={visualizePath}>Visualize Path</button>
-            <h1>Pathfind component</h1>
+        <button className = "customButton" onClick={visualizePath}>Generate Fastest Route</button>
             {gridwithNode}
             <div>
-            
             {list}
             </div>
-            <button onClick = {checkout} >CheckOut</button>
+            <button className = "checkoutButton" onClick = {checkout} >CheckOut</button>
         </div>
         );  
 };

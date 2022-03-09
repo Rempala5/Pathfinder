@@ -1,5 +1,5 @@
 .Wrapper{
-    max-width: 80%;
+    max-width: 90%;
     margin: auto;
 }
 
@@ -8,6 +8,85 @@
 }
 
 .node-shortest-path{
-background-color: red;
+    background-color: rgb(238, 177, 177);
 
 }
+
+.customButton {
+	background-color:#CC0102;
+	border-radius:10px;
+	border:1px solid #CC0102;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:18px;
+    font-weight:bold;
+    width: 350px;
+    height: 40px;
+    left: 16px;
+    top: 75px;
+	padding:10px 40px;
+	text-decoration:none;
+    margin-bottom: 40px;
+}
+.customButton:hover {
+	background-color:#b80606;
+}
+.customButton:active {
+    width: 350px;
+    height: 40px;
+    left: 16px;
+    top: 75px;
+}
+
+.checkoutButton {
+	background-color:#CC0102;
+	border-radius:10px;
+	border:1px solid #CC0102;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+    font-weight:bold;
+    width: 100px;
+    height: 40px;
+    left: 16px;
+    top: 50px;
+	padding:10px 10px;
+	text-decoration:none;
+    margin-bottom: 40px;
+    margin-top: 10px;
+    
+}
+.checkoutButton:hover {
+	background-color:#b80606;
+}
+.checkoutButton:active {
+    width: 100px;
+    height: 40px;
+    left: 16px;
+    top: 50px;
+}
+
+.list {
+    list-style-type: none;
+    counter-increment: item;
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+  
+.list:before {
+    content: counter(item);
+    margin-right: 5px;
+    font-size: 70%;
+    background-color: #CC0102;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+
+   
