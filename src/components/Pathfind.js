@@ -41,27 +41,32 @@ const Pathfind = (props) =>{
 
         let parent_path = [];
         let startNode = grid[NODE_START_ROW][NODE_START_COL];
+        startNode.plat = startNode;
+
 
         //products = insertionSort(main_products);
         products = main_products;
 
         let checkout = grid[26][46];
         for(let i=0; i<products.length; i++){
-            let gridelement = grid[products[i].shelf_id.x][products[i].shelf_id.y];
-            gridelement.isEnd = true;
-            gridelement.isWall = false;
-            gridelement.isPath= true;
-            gridelement.title = products[i].name;
-            gridelement.isPickupTile = true;
-            document.getElementById(`node-${products[i].shelf_id.y}-${products[i].shelf_id.x}`).style.background = 'pink';
-            let endNode = gridelement;
-            let path = Astar(startNode, endNode);
-            products[i].startD=path.length;
-            for(let i=0; i<path.length; i++){
-                parent_path.push(path[i]);
-            }
-            cleanSpots(grid)
-            startNode = endNode;
+            if(products[i].isPicked){
+                let gridelement = grid[products[i].shelf_id.x][products[i].shelf_id.y];
+                gridelement.isEnd = true;
+                gridelement.isWall = false;
+                gridelement.isPath= true;
+                gridelement.title = products[i].name;
+                gridelement.isPickupTile = true;
+                gridelement.plat = grid[products[i].plat_id.x][products[i].plat_id.y];
+                document.getElementById(`node-${products[i].shelf_id.y}-${products[i].shelf_id.x}`).style.background = 'pink';
+                let endNode = gridelement;
+                let path = Astar(startNode.plat, endNode.plat);
+                products[i].startD=path.length;
+                for(let i=0; i<path.length; i++){
+                    parent_path.push(path[i]);
+                }
+                cleanSpots(grid)
+                startNode = endNode;
+                }
         }
         let path = Astar(startNode, checkout);
         for(let i=0; i<path.length; i++){
@@ -137,6 +142,8 @@ const Pathfind = (props) =>{
         for(let i=0; i<Path.length; i++){
             const node = Path[i];
             document.getElementById(`node-${node.x}-${node.y}`).className = 'node node-shortest-path'
+            
+            
         }
         console.log("Visualizing")
     }
@@ -156,18 +163,18 @@ const Pathfind = (props) =>{
         console.log(col);
         console.log(row);
         console.log(Goal);
-        
         index = 0;
         for(let i = 0; i<Products.length; i++){
             if(Products[i].id === id){
                 index = i;
+                
                 break;
             }
         }
 
         let node = Products[index];
         
-        if(node.isPicked){
+        if(node.live){
             for(let i=0; i<node.path.length; i++){
                 const nodeval = node.path[i];
                 let color = '#E4E8EC'
@@ -176,11 +183,9 @@ const Pathfind = (props) =>{
                 }else if(nodeval.isStart){
                     color = 'rgb(0, 255, 0)'
                 }
-                
                 document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = color;
-                
             }
-            node.isPicked = false;
+            node.live = false;
             node.isEnd = false;
             node.isWall = true;
             node.isPath= false;
@@ -189,16 +194,17 @@ const Pathfind = (props) =>{
             setGoal(node.path[node.path.length-1])
         }else{
             alert(node.name);
-            node.isPicked = true;
+            node.live = true;
             node.isEnd = true;
             node.isWall = false;
             node.isPath= true;
             node.title = Products[index].name;
             node.isPickupTile = true;
-            let path = Astar(Goal, Grid[row][col]);
+            node.plat = Grid[Products[index].plat_id.x][Products[index].plat_id.y];
+            let path = Astar(Goal, node.plat);
             cleanSpots(Grid)
             setGrid(Grid);
-            setGoal(Grid[row][col]);
+            setGoal(Grid[row][col].plat);
             node.path = path;
             for(let i=0; i<node.path.length; i++){
                 const nodeval = path[i];
@@ -228,7 +234,6 @@ const Pathfind = (props) =>{
         console.log(col);
         console.log(row);
         console.log(Goal);
-        
         index = 0;
         for(let i = 0; i<Products.length; i++){
             if(Products[i].id === id){
@@ -236,29 +241,28 @@ const Pathfind = (props) =>{
                 break;
             }
         }
-
         let node = Products[index];
-
         let val = []
         for(let i =0; i<Products.length; i++){
-            if(i != index){
-                val.push(Products[i]);
-            }else{
-                node.isPicked = false;
-                node.isEnd = false;
+            if(i == index){
+                node.isPicked = !node.isPicked;
+                node.isEnd = !node.isEnd;
                 node.isWall = true;
-                node.isPath= false;
+                node.isPath= !node.isPath;
                 node.title = Products[index].name;
-                node.isPickupTile = false;
-                document.getElementById(`node-${col}-${row}`).style.backgroundColor = '#FFFFFF'
+                node.isPickupTile = !node.isPickupTile;
+                document.getElementById(`node-${col}-${row}`).style.backgroundColor = !node.isPicked? '#FFFFFF' : 'pink'
                 console.log(document.getElementById(id));
+                
             }
+                
+            
         }
-        setProducts(val);
-        props.products = val;
+        //setProducts(val);
+        
     }
 
-    const list = Products.map(product => <li id = {`${product.shelf_id.y}-${product.shelf_id.x}`} onClick={(product) => assignGoal(product)}>{product.name}</li>);
+    const list = Products.map(product => <li id = {`${product.shelf_id.y}-${product.shelf_id.x}`} onClick={(product) => assignGoal(product)}>{product.name}</li>) ;
 
     const checkout = () =>{
         let path = Astar(Goal, Grid[NODE_END_ROW][NODE_END_COL]);
@@ -274,6 +278,7 @@ const Pathfind = (props) =>{
             <h1>Pathfind component</h1>
             {gridwithNode}
             <div>
+            
             {list}
             </div>
             <button onClick = {checkout} >CheckOut</button>
@@ -401,6 +406,7 @@ function Spot(i, j){
     this.isFittingRoom = getFittingRoom(i, j);
     this.previous = undefined;
     this.isPickupTile = undefined;
+    this.plat = undefined;
     this.addneighbors = function(grid){
         let i = this.y;
         let j = this.x;

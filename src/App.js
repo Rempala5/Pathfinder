@@ -12,11 +12,9 @@ function App() {
     setProducts(args);
   }
 
- 
-     
+
   return (
-    <div>
-   
+    <div>  
       <Market addProd = {addProds}/>
       <Pathfind products = {Products} />
       <h1>Hello World</h1>
@@ -24,8 +22,6 @@ function App() {
     </div>
   );
 }
-
-
 
 
 export default App;

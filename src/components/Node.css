@@ -1,6 +1,6 @@
 .node{
-    width: 20px;
-    height: 20px;
+    width: 6px;
+    height: 6px;
     border: 0px solid black;
 }
 
@@ -25,7 +25,7 @@
     overflow: visible;
     position: absolute;
     vertical-align: text-top;
-    font-size: 25px;
+    font-size: 8px;
     color: #4b4b4b;
 }
 
