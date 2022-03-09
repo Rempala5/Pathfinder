@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {NODE_START_COL, NODE_START_ROW} from './Pathfind'
 
 Array.prototype.swap = function (x,y) {
@@ -10,17 +10,18 @@ Array.prototype.swap = function (x,y) {
   
   function distance_from_start(col, row){
     return (Math.abs(NODE_START_COL - col) + Math.abs(NODE_START_ROW - row));
-  
   }
 
   function Product(col,row, name){
     this.shelf_id = { "x": col, "y": row}
+    this.id = `${row}-${col}`
     this.name = name;
     this.startD = distance_from_start(col,row);
+    this.isPicked = false;
+    this.path = [];
   }
 
   const initiateProducts = () =>{
-    console.log("bottomw")
     let tempProducts = new Array();
     let cup = new Product(13, 14, 'cup');
     let bead = new Product(15,6,'bead');
@@ -53,17 +54,20 @@ Array.prototype.swap = function (x,y) {
     return products;
 }
 
-
 function Market(props){
+  const [lists, setLists] = useState([])
+  let list = []
 
     useEffect(() =>{
         let products = initiateProducts();
-        console.log("Market "+products);
         props.addProd(products);
+        setLists(products)
     }, []);
 
     return(
-        <h1>Welcome to marketPlace</h1>
+      <div>
+      <h1></h1>
+      </div>
     )
 }
 

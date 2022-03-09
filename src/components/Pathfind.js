@@ -8,24 +8,26 @@ const rows = 50;
 
 const NODE_START_ROW = 49;
 const NODE_START_COL = 45;
-const NODE_END_ROW = 39;
-const NODE_END_COL = 42;
+const NODE_END_ROW = 26;
+const NODE_END_COL = 46;
 
 const Pathfind = (props) =>{
     const [Grid, setGrid] = useState([]);
-    const [Path, setPath] = useState([]);
+    let [Path, setPath] = useState([]);
     const [Products, setProducts] = useState(props.products);
+    const [Goal, setGoal] = useState(null);
+
     let products = new Array();
     
     useEffect(() => {
-        products = props.products;
-        console.log(props.products);
-        
-        initializeGrid();
+        products = props.products; 
+        products = insertionSort(products);
+        initializeGrid(products);
         setProducts(products);
-    },[props.products]);
+        
+    },[props]);
 
-    const initializeGrid = () =>{
+    const initializeGrid = (main_products) =>{
         const grid = new Array(rows);
         for(let i = 0; i < rows; i++){
             grid[i] = new Array(cols);
@@ -34,11 +36,15 @@ const Pathfind = (props) =>{
         createSpot(grid);
         setGrid(grid);
         addNeighbors(grid);  
-        addLabels(grid);        
+        addLabels(grid);  
+        setGoal(grid[49][45]);      
 
         let parent_path = [];
         let startNode = grid[NODE_START_ROW][NODE_START_COL];
-        products = insertionSort(products);
+
+        //products = insertionSort(main_products);
+        products = main_products;
+
         let checkout = grid[26][46];
         for(let i=0; i<products.length; i++){
             let gridelement = grid[products[i].shelf_id.x][products[i].shelf_id.y];
@@ -62,6 +68,7 @@ const Pathfind = (props) =>{
             parent_path.push(path[i]);
         }
         setPath(parent_path); 
+        return parent_path;
     };
 
     function insertionSort(arr){
@@ -102,8 +109,17 @@ const Pathfind = (props) =>{
                     <div key={rowIndex} className="rowWrapper">
                         {row.map((col, colIndex) => {
                             const {isStart, isEnd, isWall, isAisle, isPath, title, isPickupTile} = col;
-                            return(
+                            if(isPickupTile){
+                                return(
+                                <div onClick = {(e) => assignGoal2(e)}>
                                 <Node key={colIndex} isStart={isStart} isAisle={isAisle} isPath={isPath} isEnd={isEnd} row={rowIndex} col={colIndex} isWall={isWall} title={title} isPickupTile={isPickupTile}/>
+                                </div>
+                            )
+                            }
+                            return(
+                                <div>
+                                <Node key={colIndex} isStart={isStart} isAisle={isAisle} isPath={isPath} isEnd={isEnd} row={rowIndex} col={colIndex} isWall={isWall} title={title} isPickupTile={isPickupTile}/>
+                                </div>
                             )
                         })}
                     </div>
@@ -112,7 +128,12 @@ const Pathfind = (props) =>{
         </div>
     );
 
+   
+
     const visualizePath = () => {
+        Path = [];
+        Path = initializeGrid(Products);
+        
         for(let i=0; i<Path.length; i++){
             const node = Path[i];
             document.getElementById(`node-${node.x}-${node.y}`).className = 'node node-shortest-path'
@@ -120,7 +141,132 @@ const Pathfind = (props) =>{
         console.log("Visualizing")
     }
 
-    const list = Products.map(product => <li>{product.name}</li>);
+
+    const assignGoal2 = (product) =>{
+        let id = product.target.id.substring(5);
+        let index = 0;
+        for(let i = 0; i<id.length; i++){
+            if(id[i] === '-'){
+                index = i;
+                break;
+            }
+        }
+        let col = id.substring(0, index);
+        let row = id.substring(index+1);
+        console.log(col);
+        console.log(row);
+        console.log(Goal);
+        
+        index = 0;
+        for(let i = 0; i<Products.length; i++){
+            if(Products[i].id === id){
+                index = i;
+                break;
+            }
+        }
+
+        let node = Products[index];
+        
+        if(node.isPicked){
+            for(let i=0; i<node.path.length; i++){
+                const nodeval = node.path[i];
+                let color = '#E4E8EC'
+                if(nodeval.isPickupTile){
+                    color = 'pink'
+                }else if(nodeval.isStart){
+                    color = 'rgb(0, 255, 0)'
+                }
+                
+                document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = color;
+                
+            }
+            node.isPicked = false;
+            node.isEnd = false;
+            node.isWall = true;
+            node.isPath= false;
+            node.title = Products[index].name;
+            node.isPickupTile = false;
+            setGoal(node.path[node.path.length-1])
+        }else{
+            alert(node.name);
+            node.isPicked = true;
+            node.isEnd = true;
+            node.isWall = false;
+            node.isPath= true;
+            node.title = Products[index].name;
+            node.isPickupTile = true;
+            let path = Astar(Goal, Grid[row][col]);
+            cleanSpots(Grid)
+            setGrid(Grid);
+            setGoal(Grid[row][col]);
+            node.path = path;
+            for(let i=0; i<node.path.length; i++){
+                const nodeval = path[i];
+                let color = 'red'
+                if(nodeval.isPickupTile){
+                    color = 'pink'
+                }else if(nodeval.isStart){
+                    color = 'rgb(0, 255, 0)'
+                }
+                document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = color
+            }
+        }
+        console.log(node.path)
+    }
+
+    const assignGoal = (product) =>{
+        let id = product.target.id;
+        let index = 0;
+        for(let i = 0; i<id.length; i++){
+            if(id[i] === '-'){
+                index = i;
+                break;
+            }
+        }
+        let col = id.substring(0, index);
+        let row = id.substring(index+1);
+        console.log(col);
+        console.log(row);
+        console.log(Goal);
+        
+        index = 0;
+        for(let i = 0; i<Products.length; i++){
+            if(Products[i].id === id){
+                index = i;
+                break;
+            }
+        }
+
+        let node = Products[index];
+
+        let val = []
+        for(let i =0; i<Products.length; i++){
+            if(i != index){
+                val.push(Products[i]);
+            }else{
+                node.isPicked = false;
+                node.isEnd = false;
+                node.isWall = true;
+                node.isPath= false;
+                node.title = Products[index].name;
+                node.isPickupTile = false;
+                document.getElementById(`node-${col}-${row}`).style.backgroundColor = '#FFFFFF'
+                console.log(document.getElementById(id));
+            }
+        }
+        setProducts(val);
+        props.products = val;
+    }
+
+    const list = Products.map(product => <li id = {`${product.shelf_id.y}-${product.shelf_id.x}`} onClick={(product) => assignGoal(product)}>{product.name}</li>);
+
+    const checkout = () =>{
+        let path = Astar(Goal, Grid[NODE_END_ROW][NODE_END_COL]);
+        for(let i = 0; i<path.length; i++){
+            let nodeval = path[i];
+            document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = 'red'
+        }
+    }
 
     return(
         <div className="Wrapper">
@@ -130,6 +276,7 @@ const Pathfind = (props) =>{
             <div>
             {list}
             </div>
+            <button onClick = {checkout} >CheckOut</button>
         </div>
         );  
 };
@@ -160,8 +307,6 @@ const addLabels = (grid) => {
     grid[42][27].title = "Seasonal";
     grid[45][37].title = "Entrance";
 }
-
-
 
 function getWall(x, y){
     let isWall = false;
