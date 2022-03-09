@@ -52,8 +52,8 @@ const Pathfind = (props) =>{
             if(products[i].isPicked){
                 let gridelement = grid[products[i].shelf_id.x][products[i].shelf_id.y];
                 gridelement.isEnd = true;
-                gridelement.isWall = false;
-                gridelement.isPath= true;
+                gridelement.isWall = true;
+                gridelement.isPath= false;
                 gridelement.title = products[i].name;
                 gridelement.isPickupTile = true;
                 gridelement.plat = grid[products[i].plat_id.x][products[i].plat_id.y];

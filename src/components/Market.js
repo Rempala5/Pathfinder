@@ -26,10 +26,10 @@ Array.prototype.swap = function (x,y) {
   const initiateProducts = () =>{
     let tempProducts = new Array();
     let cup = new Product(13, 14, 'cup', 14, 14);
-    let bead = new Product(15,6,'bead', 14, 16);
+    let bead = new Product(15,6,'bead', 14, 6);
     let toy = new Product(46, 14, 'toy', 45, 14);
     let cake = new Product(30, 44, 'cake', 30, 43);
-    let candy = new Product(12, 20, 'candy', 12, 21);
+    let candy = new Product(16, 20, 'candy', 12, 21);
     let chocolate = new Product(12, 18, 'chocolate', 12, 19);
 
     tempProducts.push(toy);
