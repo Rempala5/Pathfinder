@@ -16,10 +16,11 @@ function App() {
      
   return (
     <div>
-
+      <div className='headerBar'></div>
       <Market addProd = {addProds}/>
       <Pathfind products = {Products} />
-
+      <h1><br></br></h1>
+      <div className='footerBar'></div>
     </div>
   );
 }

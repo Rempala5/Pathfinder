@@ -57,18 +57,21 @@ const Pathfind = (props) =>{
                 gridelement.title = products[i].name;
                 gridelement.isPickupTile = true;
                 gridelement.plat = grid[products[i].plat_id.x][products[i].plat_id.y];
-                document.getElementById(`node-${products[i].shelf_id.y}-${products[i].shelf_id.x}`).style.background = 'pink';
+                document.getElementById(`node-${products[i].shelf_id.y}-${products[i].shelf_id.x}`).style.background = 'red';
                 let endNode = gridelement;
                 let path = Astar(startNode.plat, endNode.plat);
+                path = path.reverse();
                 products[i].startD=path.length;
                 for(let i=0; i<path.length; i++){
                     parent_path.push(path[i]);
                 }
+                
                 cleanSpots(grid)
                 startNode = endNode;
                 }
         }
-        let path = Astar(startNode, checkout);
+        let path = Astar(startNode.plat, checkout);
+        path = path.reverse();
         for(let i=0; i<path.length; i++){
             parent_path.push(path[i]);
         }
@@ -138,14 +141,15 @@ const Pathfind = (props) =>{
     const visualizePath = () => {
         Path = [];
         Path = initializeGrid(Products);
-        
-        for(let i=0; i<Path.length; i++){
-            const node = Path[i];
-            document.getElementById(`node-${node.x}-${node.y}`).className = 'node node-shortest-path'
+            for(let i=0; i<Path.length; i++){
+                setTimeout(() => {
+                    const node = Path[i];
+                    document.getElementById(`node-${node.x}-${node.y}`).className = 'node node-shortest-path'
+                    document.getElementById(`node-${node.x}-${node.y}`).style.backgroundColor = 'rgb(255, 143, 143)';
+                }, i * 15);
+            }
             
-            
-        }
-        console.log("Visualizing")
+            console.log("Visualizing")
     }
 
 
@@ -179,7 +183,7 @@ const Pathfind = (props) =>{
                 const nodeval = node.path[i];
                 let color = '#E4E8EC'
                 if(nodeval.isPickupTile){
-                    color = 'pink'
+                    color = 'red'
                 }else if(nodeval.isStart){
                     color = 'rgb(0, 255, 0)'
                 }
@@ -205,16 +209,22 @@ const Pathfind = (props) =>{
             cleanSpots(Grid)
             setGrid(Grid);
             setGoal(Grid[row][col].plat);
-            node.path = path;
+            node.path = path.reverse();
+            
             for(let i=0; i<node.path.length; i++){
-                const nodeval = path[i];
-                let color = 'red'
-                if(nodeval.isPickupTile){
-                    color = 'pink'
-                }else if(nodeval.isStart){
-                    color = 'rgb(0, 255, 0)'
-                }
-                document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = color
+
+                setTimeout(() => {
+                    const nodeval = path[i];
+                    let color = 'rgb(255, 143, 143)'
+                    if(nodeval.isPickupTile){
+                        color = 'red'
+                    }else if(nodeval.isStart){
+                        color = 'rgb(0, 255, 0)'
+                    }
+                    document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = color
+                }, i * 5);
+
+                
             }
         }
         console.log(node.path)
@@ -251,9 +261,8 @@ const Pathfind = (props) =>{
                 node.isPath= !node.isPath;
                 node.title = Products[index].name;
                 node.isPickupTile = !node.isPickupTile;
-                document.getElementById(`node-${col}-${row}`).style.backgroundColor = !node.isPicked? '#FFFFFF' : 'pink'
+                document.getElementById(`node-${col}-${row}`).style.backgroundColor = !node.isPicked? '#FFFFFF' : 'red'
                 console.log(document.getElementById(id));
-                
             }
                 
             
@@ -262,26 +271,33 @@ const Pathfind = (props) =>{
         
     }
 
-    const list = Products.map(product => <li id = {`${product.shelf_id.y}-${product.shelf_id.x}`} onClick={(product) => assignGoal(product)} className = "list">{product.name}</li>);
+    const list = Products.map(product => <li className="list"><label className="switch"> <input type="checkbox"></input>
+    <span className = "slider round" id = {`${product.shelf_id.y}-${product.shelf_id.x}`} onClick={(product) => assignGoal(product)}></span>
+    </label>{product.name}</li>) ;
 
     const checkout = () =>{
         let path = Astar(Goal, Grid[NODE_END_ROW][NODE_END_COL]);
+        path = path.reverse();
         for(let i = 0; i<path.length; i++){
-            let nodeval = path[i];
-            document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = 'rgb(238, 177, 177)'
+            setTimeout(() => {
+                let nodeval = path[i];
+                document.getElementById(`node-${nodeval.x}-${nodeval.y}`).style.backgroundColor = 'rgb(255, 143, 143)'
+            }, i * 5);
+            
         }
     }
 
     return(
         <div className="Wrapper">
-        <button className = "customButton" onClick={visualizePath}>Generate Fastest Route</button>
+        <button className = "customButton" onClick={visualizePath}>Recommended Route</button>
             {gridwithNode}
-            <div>
+            <div >  
+            <p><b>Remove/Add Items From Your Cart</b></p>
             {list}
             </div>
             <button className = "checkoutButton" onClick = {checkout} >CheckOut</button>
         </div>
-        );  
+        );
 };
 
 const addNeighbors = (grid) => {
@@ -303,7 +319,7 @@ const addLabels = (grid) => {
     grid[27][23].title = "Fitting Rooms";
     grid[32][20].title = "Mens";
     grid[21][43].title = "Order Pickup";
-    grid[25][43].title = "Checkout";
+    grid[27][44].title = "Checkout";
     grid[36][7].title = "Tech";
     grid[44][5].title = "Toys/Games";
     grid[39][32].title = "Entertainment";
